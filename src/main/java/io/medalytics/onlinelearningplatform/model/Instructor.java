@@ -1,29 +1,23 @@
 package io.medalytics.onlinelearningplatform.model;
 
-
 import lombok.*;
 
 import javax.persistence.*;
 import java.util.Set;
 
+
 @Entity
-@Table(name = "Students")
-@NoArgsConstructor
+@Table(name = "Instructors")
 @AllArgsConstructor
+@NoArgsConstructor
 @Getter
 @Setter
 @EqualsAndHashCode
 @ToString
-@Builder
-public class Student extends BaseModel {
-    @Column(name = "first_name")
-    private String firstName;
-    @Column(name = "last_name")
-    private String lastName;
-    @Column(name = "email")
+public class Instructor extends BaseModel{
+    private String username;
     private String email;
-    @Column(name = "password")
     private String password;
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<Course> course;
+    private Set<Course> courses;
 }

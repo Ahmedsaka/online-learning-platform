@@ -1,6 +1,6 @@
 package io.medalytics.onlinelearningplatform.model.enums;
 
-public enum Role {
+public enum RoleType {
 
     ROLE_STUDENT("STUDENT"),
     ROLE_INSTRUCTOR("INSTRUCTOR"),
@@ -8,7 +8,7 @@ public enum Role {
 
     private String value;
 
-    Role(String value) {
+    RoleType(String value) {
         this.value = value;
     }
 

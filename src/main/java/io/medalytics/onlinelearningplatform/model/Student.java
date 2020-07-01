@@ -4,7 +4,6 @@ package io.medalytics.onlinelearningplatform.model;
 import lombok.*;
 
 import javax.persistence.*;
-import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -27,6 +26,4 @@ public class Student extends BaseModel {
     private String password;
    @ManyToMany(mappedBy = "students")
     private Set<Course> courses;
-    @OneToMany
-    private Set<Role> roles = new HashSet<>();
 }

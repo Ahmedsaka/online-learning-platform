@@ -1,7 +1,7 @@
 package io.medalytics.onlinelearningplatform.service;
 
+import io.medalytics.onlinelearningplatform.dao.CourseDao;
 import io.medalytics.onlinelearningplatform.model.Course;
-import io.medalytics.onlinelearningplatform.repository.CourseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -10,18 +10,18 @@ import java.util.List;
 @Service
 public class CourseService {
 
-    private CourseRepository courseRepository;
+    private CourseDao courseDao;
 
     @Autowired
-    public CourseService(CourseRepository courseRepository) {
-        this.courseRepository = courseRepository;
+    public CourseService(CourseDao courseDao) {
+        this.courseDao = courseDao;
     }
 
     public List<Course> findAllCourses(){
-        return courseRepository.findAll();
+        return courseDao.findAll();
     }
 
     public List<Course> findCourseBySearchParameter(String keyword) {
-        return courseRepository.findByCourseNameContains(keyword);
+        return courseDao.findByCourseNameContains(keyword);
     }
 }

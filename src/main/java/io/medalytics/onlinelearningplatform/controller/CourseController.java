@@ -31,6 +31,4 @@ public class CourseController {
     public List<Course> getCoursesByParameter(@PathVariable("param") String parameter) {
         return courseService.findCourseBySearchParameter(parameter);
     }
-
-
 }

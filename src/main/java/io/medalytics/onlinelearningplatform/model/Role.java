@@ -9,7 +9,7 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "Roles")
+@Table(name = "Role")
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter

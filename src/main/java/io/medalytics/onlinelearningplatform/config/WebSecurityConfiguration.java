@@ -22,7 +22,8 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.authenticationProvider(daoAuthenticationProvider());
+        auth.authenticationProvider(daoAuthenticationProvider())
+                .parentAuthenticationManager(authenticationManagerBean());
     }
 
     @Autowired
@@ -35,9 +36,10 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
         http
                 .csrf().disable()
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .sessionManagement()
+                    .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
-                .addFilter(new JwtUsernameAndPasswordFilter(authenticationManager()))
+                .addFilter(new JwtUsernameAndPasswordFilter(authenticationManagerBean()))
                 .authorizeRequests()
                 .antMatchers("**/h2-console/**").hasRole("ADMIN")
                 .anyRequest()
@@ -47,7 +49,13 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
-    private DaoAuthenticationProvider daoAuthenticationProvider(){
+    @Override
+    public AuthenticationManager authenticationManagerBean() throws Exception {
+        return super.authenticationManagerBean();
+    }
+
+    @Bean
+    public DaoAuthenticationProvider daoAuthenticationProvider(){
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
         provider.setUserDetailsService(userServiceDetails);
         provider.setPasswordEncoder(passwordEncoder);

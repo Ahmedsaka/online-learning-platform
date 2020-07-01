@@ -6,6 +6,7 @@ import io.jsonwebtoken.security.Keys;
 import io.medalytics.onlinelearningplatform.model.request.UsernamePasswordAuthenticationRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -28,7 +29,7 @@ import java.util.Date;
 @Component
 public class JwtUsernameAndPasswordFilter extends UsernamePasswordAuthenticationFilter {
     private final Logger log = LoggerFactory.getLogger(JwtUsernameAndPasswordFilter.class);
-    private AuthenticationManager authenticationManager;
+    private final AuthenticationManager authenticationManager;
 
     public JwtUsernameAndPasswordFilter(AuthenticationManager authenticationManager) {
         this.authenticationManager = authenticationManager;
@@ -75,7 +76,7 @@ public class JwtUsernameAndPasswordFilter extends UsernamePasswordAuthentication
                     .signWith(Keys.hmacShaKeyFor(secretKey.getBytes())) // Encrypts the message with secretKey
                     .compact();
 
-            response.addHeader("Authorization", "Bearer " + token);
+            response.addHeader("Authorization", "Bearer " + token); //Set Authorization header
         super.successfulAuthentication(request, response, chain, authResult);
     }
 

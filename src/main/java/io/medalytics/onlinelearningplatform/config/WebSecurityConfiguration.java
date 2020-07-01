@@ -1,12 +1,14 @@
 package io.medalytics.onlinelearningplatform.config;
 
 import io.medalytics.onlinelearningplatform.service.CustomUserServiceDetails;
+import io.medalytics.onlinelearningplatform.util.JwtTokenVerifier;
 import io.medalytics.onlinelearningplatform.util.JwtUsernameAndPasswordFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.BeanIds;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -22,8 +24,8 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.authenticationProvider(daoAuthenticationProvider())
-                .parentAuthenticationManager(authenticationManagerBean());
+        auth.parentAuthenticationManager(authenticationManagerBean())
+                .authenticationProvider(daoAuthenticationProvider());
     }
 
     @Autowired
@@ -40,6 +42,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                     .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .addFilter(new JwtUsernameAndPasswordFilter(authenticationManagerBean()))
+                .addFilterAfter(new JwtTokenVerifier(), JwtUsernameAndPasswordFilter.class)
                 .authorizeRequests()
                 .antMatchers("**/h2-console/**").hasRole("ADMIN")
                 .anyRequest()
@@ -48,8 +51,8 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
         http.headers().frameOptions().disable();
     }
 
-    @Bean
     @Override
+    @Bean(name = BeanIds.AUTHENTICATION_MANAGER)
     public AuthenticationManager authenticationManagerBean() throws Exception {
         return super.authenticationManagerBean();
     }

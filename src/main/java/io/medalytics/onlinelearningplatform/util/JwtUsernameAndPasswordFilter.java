@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.annotation.Order;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -26,7 +27,7 @@ import java.util.Date;
 /*
 *The reason for this class is to filter every request and validate Jwt
 * */
-@Component
+
 public class JwtUsernameAndPasswordFilter extends UsernamePasswordAuthenticationFilter {
     private final Logger log = LoggerFactory.getLogger(JwtUsernameAndPasswordFilter.class);
     private final AuthenticationManager authenticationManager;
@@ -35,9 +36,9 @@ public class JwtUsernameAndPasswordFilter extends UsernamePasswordAuthentication
         this.authenticationManager = authenticationManager;
     }
 
-    @Value("${jwt.token.expiration}")
+    @Value("${application.jwt.expiration}")
     private int tokenExpirationPeriod;
-    @Value("${jwt.token.secretKey}")
+    @Value("${application.jwt.secretKey}")
     private String secretKey;
 
     @Override

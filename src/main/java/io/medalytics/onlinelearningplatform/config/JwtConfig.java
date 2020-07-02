@@ -2,7 +2,7 @@ package io.medalytics.onlinelearningplatform.config;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
-@ConfigurationProperties("application.jwt")
+@ConfigurationProperties(value = "application.jwt")
 public class JwtConfig {
 
     private String expiration;

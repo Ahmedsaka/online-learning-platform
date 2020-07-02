@@ -15,6 +15,7 @@ import java.util.List;
 @Getter
 @EqualsAndHashCode
 @ToString
+@Builder
 public class Course extends BaseModel {
 
     @Column(name = "course_name")

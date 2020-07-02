@@ -17,7 +17,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-//@EnableGlobalMethodSecurity(prePostEnabled = true)
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 @EnableWebSecurity
 @Configuration
 public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
@@ -28,10 +28,14 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .authenticationProvider(daoAuthenticationProvider());
     }
 
-    @Autowired
     private CustomUserServiceDetails userServiceDetails;
-    @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    public WebSecurityConfiguration(CustomUserServiceDetails userServiceDetails, PasswordEncoder passwordEncoder) {
+        this.userServiceDetails = userServiceDetails;
+        this.passwordEncoder = passwordEncoder;
+    }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -45,6 +49,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .addFilterAfter(new JwtTokenVerifier(), JwtUsernameAndPasswordFilter.class)
                 .authorizeRequests()
                 .antMatchers("**/h2-console/**").hasRole("ADMIN")
+                .antMatchers("**/api/v1/courses/*", "**/api/v1/authenticate/**").permitAll()
                 .anyRequest()
                 .authenticated();
 

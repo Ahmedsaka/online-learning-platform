@@ -24,4 +24,12 @@ public class CourseService {
     public List<Course> findCourseBySearchParameter(String keyword) {
         return courseDao.findByCourseNameContains(keyword);
     }
+
+    public List<Course> findCourseByInstructorName(String parameter) {
+        return courseDao.findByInstructorName(parameter);
+    }
+
+    public Course save(Course course) {
+        return courseDao.save(course);
+    }
 }

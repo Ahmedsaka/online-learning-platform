@@ -14,4 +14,5 @@ public interface CourseDao extends JpaRepository<Course, Long> {
 //    public List<Course> find(@Param("keyword") String keyword);
 
     public List<Course> findByCourseNameContains(String keyword);
+    public List<Course> findByInstructorName(String instructorName);
 }

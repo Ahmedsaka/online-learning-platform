@@ -15,6 +15,7 @@ import java.util.Set;
 @EqualsAndHashCode
 @ToString
 public class User extends BaseModel {
+
     @Column(name = "username")
     private String username;
     @Column(name = "email")

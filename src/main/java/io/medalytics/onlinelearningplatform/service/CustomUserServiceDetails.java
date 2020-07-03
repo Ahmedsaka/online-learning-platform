@@ -29,4 +29,11 @@ public class CustomUserServiceDetails implements UserDetailsService {
     public User save(User user) {
         return userDao.save(user);
     }
+
+    public boolean userExist(String username){
+        if (userDao.existsByUsername(username)){
+            throw new IllegalStateException(String.format("User %s already exist", username));
+        }
+        return true;
+    }
 }

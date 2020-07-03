@@ -3,6 +3,7 @@ package io.medalytics.onlinelearningplatform.service;
 import io.medalytics.onlinelearningplatform.model.User;
 import io.medalytics.onlinelearningplatform.dao.UserDao;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -23,5 +24,9 @@ public class CustomUserServiceDetails implements UserDetailsService {
         User user = userDao.findByUsername(emailOrUsername);
         if (user == null) throw new UsernameNotFoundException(String.format("You are not registered as a student with email %s", emailOrUsername));
         return new CustomUserDetails(user);
+    }
+
+    public User save(User user) {
+        return userDao.save(user);
     }
 }

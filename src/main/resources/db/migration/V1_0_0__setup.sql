@@ -7,6 +7,8 @@ CREATE TABLE Role(
 
 CREATE TABLE User(
   id BIGINT AUTO_INCREMENT PRIMARY KEY ,
+  first_name VARCHAR NOT NULL ,
+  last_name VARCHAR NOT NULL ,
   username VARCHAR (50) NOT NULL ,
   email VARCHAR (50) UNIQUE ,
   password VARCHAR (50) NOT NULL ,

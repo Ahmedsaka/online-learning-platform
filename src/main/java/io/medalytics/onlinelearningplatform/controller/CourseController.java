@@ -22,17 +22,20 @@ public class CourseController {
     }
 
     @GetMapping(path = "/")
+    @PreAuthorize("permitAll()")
     public List<Course> getAllCourses(){
         return courseService.findAllCourses();
     }
 
     @GetMapping(path = "/findCourseByParameter/{param}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("permitAll()")
     public List<Course> getCoursesByParameter(@PathVariable("param") String parameter) {
         return courseService.findCourseBySearchParameter(parameter);
     }
 
 //    @PreAuthorize("hasRole('ROLE_STUDENT') or hasRole('ROLE_INSTRUCTOR' or hasRole('ROLE_ADMIN'))")
     @GetMapping(path = "/findCourseByInstructorName/{param}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("permitAll()")
     public List<Course> findCourseByInstructorName(@PathVariable("param") String parameter) {
         return courseService.findCourseByInstructorName(parameter);
     }

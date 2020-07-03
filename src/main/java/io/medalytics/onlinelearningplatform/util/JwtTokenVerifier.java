@@ -1,9 +1,11 @@
 package io.medalytics.onlinelearningplatform.util;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.security.SignatureException;
 import io.jsonwebtoken.security.WeakKeyException;
+import io.medalytics.onlinelearningplatform.model.UserSignUpRequest;
 import lombok.var;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -35,10 +37,23 @@ public class JwtTokenVerifier extends OncePerRequestFilter {
 
         String authorizationHeader = httpServletRequest.getHeader("Authorization");
 //        If request does not contain an authorizationHeader, continue to the next filter....
-        if (authorizationHeader.equals(null) || !authorizationHeader.startsWith("Bearer ")){
+        if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")){
             filterChain.doFilter(httpServletRequest, httpServletResponse);
             return;
         }
+
+        if (httpServletRequest.getRequestURI().equals("/api/v1/authenticate/signUp")){
+            ObjectMapper mapper = new ObjectMapper();
+            UserSignUpRequest signUpRequest = mapper.readValue(
+                    httpServletRequest.getInputStream(),
+                    UserSignUpRequest.class
+            );
+            if (signUpRequest != null){
+                filterChain.doFilter(httpServletRequest, httpServletResponse);
+                return;
+            }
+        }
+
 //      If request contains an authorizationHeader, replace the "Bearer " string with "" leaving only the token
         String token = authorizationHeader.replace("Bearer ", "");
 //      Extract the claims from the token using the secretKey
@@ -62,17 +77,7 @@ public class JwtTokenVerifier extends OncePerRequestFilter {
             SecurityContextHolder.getContext().setAuthentication(authentication);
 //        }catch (JwtException e){
 //            throw new IllegalStateException(String.format("Token %s can not be trusted", token));
-        } catch (ExpiredJwtException e) {
-            e.printStackTrace();
-        } catch (UnsupportedJwtException e) {
-            e.printStackTrace();
-        } catch (MalformedJwtException e) {
-            e.printStackTrace();
-        } catch (SignatureException e) {
-            e.printStackTrace();
-        } catch (IllegalArgumentException e) {
-            e.printStackTrace();
-        } catch (WeakKeyException e) {
+        } catch (ExpiredJwtException | WeakKeyException | UnsupportedJwtException | MalformedJwtException | SignatureException | IllegalArgumentException e) {
             e.printStackTrace();
         }
 //        Pass response to the next filter in the chain

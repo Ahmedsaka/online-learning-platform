@@ -6,6 +6,7 @@ import io.medalytics.onlinelearningplatform.util.JwtUsernameAndPasswordFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.BeanIds;
@@ -41,18 +42,23 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
 
         http
-                .csrf().disable()
-                .sessionManagement()
-                    .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and()
-                .addFilter(new JwtUsernameAndPasswordFilter(authenticationManagerBean()))
-                .addFilterAfter(new JwtTokenVerifier(), JwtUsernameAndPasswordFilter.class)
                 .authorizeRequests()
-                .antMatchers("**/h2-console/**").hasRole("ADMIN")
-                .antMatchers("**/api/v1/courses/*", "**/api/v1/authenticate/**").permitAll()
+                .antMatchers(HttpMethod.GET, "/api/v1/course/*")
+                .permitAll()
+                .antMatchers("/api/v1/authenticate/signUp")
+                .permitAll()
+                .antMatchers("**/h2-console/**").hasRole("ROLE_ADMIN")
                 .anyRequest()
-                .authenticated();
-
+                .authenticated()
+                .and()
+                .csrf()
+                .disable()
+                .sessionManagement()
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                ;
+//
+        http.addFilter(new JwtUsernameAndPasswordFilter(authenticationManagerBean()))
+                .addFilterAfter(new JwtTokenVerifier(), JwtUsernameAndPasswordFilter.class);
         http.headers().frameOptions().disable();
     }
 

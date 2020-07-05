@@ -12,6 +12,7 @@ CREATE TABLE User(
   username VARCHAR (50) NOT NULL ,
   email VARCHAR (50) UNIQUE ,
   password VARCHAR (50) NOT NULL ,
+  createdDate DATETIME,
   role_id INT REFERENCES Role(id)
 );
 
@@ -25,6 +26,7 @@ CREATE TABLE Course(
   id BIGINT AUTO_INCREMENT PRIMARY KEY ,
   course_name VARCHAR (100) NOT NULL ,
   instructor_name VARCHAR (50) NOT NULL ,
+  createdDate DATETIME,
   description VARCHAR (255)
 );
 
@@ -34,6 +36,7 @@ CREATE TABLE Student(
   last_name VARCHAR (50) NOT NULL ,
   email VARCHAR (50) UNIQUE ,
   password VARCHAR (50) NOT NULL ,
+  createdDate DATETIME,
   course_id BIGINT REFERENCES Course(id)
 );
 

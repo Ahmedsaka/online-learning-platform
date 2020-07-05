@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 
 @RestController
@@ -38,10 +39,13 @@ public class AdminUserController {
 
         userServiceDetails.userExist(request.getUsername());
 
-        Set<Role> roles = new HashSet<>();
-        roles.add(
-                roleService.findByName(request.getRoleType())
-        );
+        Set<Role> roles = request.getRoleType()
+                .stream()
+                .map(roleType -> roleService.findByName(roleType))
+                .collect(Collectors.toSet());
+//        roles.add(
+//                roleService.findByName(request.getRoleType())
+//        );
         return ResponseEntity.ok(
                 userServiceDetails.save(
                         User.builder()

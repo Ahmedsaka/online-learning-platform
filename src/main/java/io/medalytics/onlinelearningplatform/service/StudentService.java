@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class StudentService {
@@ -17,7 +18,18 @@ public class StudentService {
         this.studentDao = studentDao;
     }
 
-    public List<Student> findAllStudents() {
+    public List<Student> findAll() {
         return studentDao.findAll();
+    }
+
+    public Student save(Student student) {
+        return studentDao.save(student);
+    }
+
+
+    public Student findById(long id) throws Exception {
+        Optional<Student> studentOptional = Optional.ofNullable(studentDao.findById(id)
+                .orElseThrow(() -> new Exception(String.format("Student with id %s was not found", id))));
+        return studentOptional.get();
     }
 }

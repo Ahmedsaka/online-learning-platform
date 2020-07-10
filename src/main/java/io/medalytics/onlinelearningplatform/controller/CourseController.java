@@ -21,27 +21,27 @@ public class CourseController {
         this.courseService = courseService;
     }
 
-    @GetMapping(path = "/")
+    @GetMapping
     @PreAuthorize("permitAll()")
     public List<Course> getAllCourses(){
         return courseService.findAllCourses();
     }
 
-    @GetMapping(path = "/findCourseByParameter/{param}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(path = "/find-course-by-parameter/{param}", produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("permitAll()")
     public List<Course> getCoursesByParameter(@PathVariable("param") String parameter) {
         return courseService.findCourseBySearchParameter(parameter);
     }
 
 //    @PreAuthorize("hasRole('ROLE_STUDENT') or hasRole('ROLE_INSTRUCTOR' or hasRole('ROLE_ADMIN'))")
-    @GetMapping(path = "/findCourseByInstructorName/{param}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(path = "/find-course-by-instructor-name/{param}", produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("permitAll()")
     public List<Course> findCourseByInstructorName(@PathVariable("param") String parameter) {
         return courseService.findCourseByInstructorName(parameter);
     }
 
     @PreAuthorize("hasRole('ROLE_INSTRUCTOR')")
-    @PostMapping(value = "/addCourse", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/add-course", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public Course save(@RequestBody CourseCreationRequest request) {
         return courseService.save(
                 Course.builder()

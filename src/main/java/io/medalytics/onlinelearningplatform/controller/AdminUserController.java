@@ -33,7 +33,7 @@ public class AdminUserController {
         this.roleService = roleService;
     }
 
-    @PostMapping(path = "/signUp", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(path = "/sign-up", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("permitAll()")
     public ResponseEntity<User> signUp(@RequestBody UserSignUpRequest request){
 

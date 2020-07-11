@@ -1,8 +1,6 @@
 package io.medalytics.onlinelearningplatform.config;
 
-import io.medalytics.onlinelearningplatform.service.CustomUserServiceDetails;
-import io.medalytics.onlinelearningplatform.util.JwtTokenVerifier;
-import io.medalytics.onlinelearningplatform.util.JwtUsernameAndPasswordFilter;
+import io.medalytics.onlinelearningplatform.service.CustomUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -29,11 +27,11 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .authenticationProvider(daoAuthenticationProvider());
     }
 
-    private CustomUserServiceDetails userServiceDetails;
+    private CustomUserDetailsService userServiceDetails;
     private PasswordEncoder passwordEncoder;
 
     @Autowired
-    public WebSecurityConfiguration(CustomUserServiceDetails userServiceDetails, PasswordEncoder passwordEncoder) {
+    public WebSecurityConfiguration(CustomUserDetailsService userServiceDetails, PasswordEncoder passwordEncoder) {
         this.userServiceDetails = userServiceDetails;
         this.passwordEncoder = passwordEncoder;
     }
@@ -45,7 +43,9 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers(HttpMethod.GET, "/api/v1/course/*")
                 .permitAll()
-                .antMatchers("/api/v1/authenticate/signUp")
+                .antMatchers("/api/v1/authenticate/sign-up")
+                .permitAll()
+                .antMatchers("/api/v1/authenticate/login")
                 .permitAll()
                 .antMatchers("**/h2-console/**").hasRole("ADMIN")
                 .anyRequest()
@@ -57,8 +57,9 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 ;
 //
-        http.addFilter(new JwtUsernameAndPasswordFilter(authenticationManagerBean()))
-                .addFilterAfter(new JwtTokenVerifier(), JwtUsernameAndPasswordFilter.class);
+//        http.addFilter(new JwtUsernameAndPasswordFilter(authenticationManagerBean()))
+//                .addFilterAfter(new JwtTokenVerifier(), JwtUsernameAndPasswordFilter.class);
+//        http.addFilter(new JwtTokenVerifier());
         http.headers().frameOptions().disable();
     }
 

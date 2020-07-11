@@ -9,7 +9,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.web.servlet.ModelAndView;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -17,10 +16,10 @@ import java.util.Set;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
-class CustomUserServiceDetailsTest {
+class CustomUserDetailsServiceTest {
 
     @InjectMocks
-    private CustomUserServiceDetails userServiceDetails;
+    private CustomUserDetailsService userServiceDetails;
     @Mock
     private UserDao userDao;
 
@@ -43,7 +42,7 @@ class CustomUserServiceDetailsTest {
                 .build();
 
         Mockito.when(userDao.findByUsername(user.getUsername()))
-                .thenReturn(user);
+                .thenReturn(java.util.Optional.ofNullable(user));
 
         Mockito.when(userDao.save(user))
                 .thenReturn(user);

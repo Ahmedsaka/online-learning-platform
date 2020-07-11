@@ -42,7 +42,7 @@ public class JwtTokenVerifier extends OncePerRequestFilter {
             return;
         }
 
-        if (httpServletRequest.getRequestURI().equals("/api/v1/authenticate/signUp")){
+        if (httpServletRequest.getRequestURI().equals("/api/v1/authenticate/sign-up")){
             ObjectMapper mapper = new ObjectMapper();
             UserSignUpRequest signUpRequest = mapper.readValue(
                     httpServletRequest.getInputStream(),

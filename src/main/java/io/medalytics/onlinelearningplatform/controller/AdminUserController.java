@@ -19,9 +19,9 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -41,6 +41,7 @@ public class AdminUserController {
     private RoleService roleService;
     private AuthenticationManager authenticationManager;
     private JwtUtil jwtUtil;
+    private PasswordEncoder passwordEncoder;
 
     @Value("${application.jwt.expiration}")
     private int tokenExpirationPeriod;
@@ -48,11 +49,12 @@ public class AdminUserController {
     private String secretKey;
 
     @Autowired
-    public AdminUserController(CustomUserDetailsService userDetailsService, RoleService roleService, AuthenticationManager authenticationManager, JwtUtil jwtUtil) {
+    public AdminUserController(CustomUserDetailsService userDetailsService, RoleService roleService, AuthenticationManager authenticationManager, JwtUtil jwtUtil, PasswordEncoder passwordEncoder) {
         this.userDetailsService = userDetailsService;
         this.roleService = roleService;
         this.authenticationManager = authenticationManager;
         this.jwtUtil = jwtUtil;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @PostMapping(path = "/sign-up", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -65,9 +67,6 @@ public class AdminUserController {
                 .stream()
                 .map(roleType -> roleService.findByName(roleType))
                 .collect(Collectors.toSet());
-//        roles.add(
-//                roleService.findByName(request.getRoleType())
-//        );
         return ResponseEntity.ok(
                 userDetailsService.save(
                         User.builder()
@@ -75,7 +74,7 @@ public class AdminUserController {
                                 .lastName(request.getLastName())
                                 .username(request.getUsername())
                                 .email(request.getEmail())
-                                .password(request.getPassword())
+                                .password(passwordEncoder.encode(request.getPassword()))
                                 .roles(roles)
                                 .build()
                 )
@@ -85,7 +84,7 @@ public class AdminUserController {
     @PostMapping(path = "/login", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("permitAll()")
     public ResponseEntity<?> getAuthenticationToken(@RequestBody UsernamePasswordAuthenticationRequest request) throws AuthenticationException, BadCredentialsException {
-        Authentication  authentication = authenticationManager.authenticate(
+        authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         request.getUsername(),
                         request.getPassword()

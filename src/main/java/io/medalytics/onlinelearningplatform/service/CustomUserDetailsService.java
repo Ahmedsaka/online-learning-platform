@@ -33,9 +33,6 @@ public class CustomUserDetailsService implements UserDetailsService {
     }
 
     public boolean userExist(String username){
-        if (userDao.existsByUsername(username)){
-            throw new IllegalStateException(String.format("User %s already exist", username));
-        }
-        return true;
+        return userDao.existsByUsername(username);
     }
 }

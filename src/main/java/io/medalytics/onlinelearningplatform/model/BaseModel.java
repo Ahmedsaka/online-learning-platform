@@ -14,7 +14,7 @@ public class BaseModel implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    private LocalDate createdDate;
+    private java.sql.Date createdDate;
 
     public void setId(Long id) {
         this.id = id;
@@ -24,11 +24,11 @@ public class BaseModel implements Serializable {
         return id;
     }
 
-    public void setCreatedDate(LocalDate createdDate) {
-        this.createdDate = LocalDate.now();
+    public void setCreatedDate(java.sql.Date createdDate) {
+        this.createdDate = new java.sql.Date(createdDate.getTime());
     }
 
-    public LocalDate getCreatedDate(){
+    public java.sql.Date getCreatedDate(){
         return this.createdDate;
     }
 }

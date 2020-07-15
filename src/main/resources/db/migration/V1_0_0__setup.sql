@@ -2,7 +2,8 @@
 CREATE TABLE Role(
   id BIGINT PRIMARY KEY AUTO_INCREMENT,
   name VARCHAR (50) UNIQUE,
-  description VARCHAR (255)
+  description VARCHAR (255),
+  created_date DATE
 );
 
 CREATE TABLE User(
@@ -16,7 +17,7 @@ CREATE TABLE User(
   role_id INT REFERENCES Role(id)
 );
 
-CREATE TABLE role_user(
+CREATE TABLE users_roles(
   id BIGINT AUTO_INCREMENT PRIMARY KEY ,
   role_id BIGINT REFERENCES role(id),
   user_id BIGINT REFERENCES user(id)
@@ -45,3 +46,15 @@ CREATE TABLE course_student(
   course_id BIGINT REFERENCES Course(id),
   student_id BIGINT REFERENCES Student(id)
 );
+
+--
+-- INSERT INTO Role(name, created_date, description)
+-- VALUES('ROLE_STUDENT', CURRENT_TIMESTAMP(), 'Student');
+--
+-- INSERT INTO Role(name, created_date, description)
+-- VALUES('ROLE_INSTRUCTOR', CURRENT_TIMESTAMP(), 'Instructor');
+--
+-- INSERT INTO Role(name, created_date, description)
+-- VALUES('ROLE_ADMIN', CURRENT_TIMESTAMP(), 'Admin');
+
+

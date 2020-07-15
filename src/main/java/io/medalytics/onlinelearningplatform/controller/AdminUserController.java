@@ -22,16 +22,14 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Set;
 import java.util.stream.Collectors;
 
 
 @RestController
+@CrossOrigin
 @RequestMapping(path = "/api/v1/authenticate")
 public class AdminUserController {
 
@@ -49,7 +47,13 @@ public class AdminUserController {
     private String secretKey;
 
     @Autowired
-    public AdminUserController(CustomUserDetailsService userDetailsService, RoleService roleService, AuthenticationManager authenticationManager, JwtUtil jwtUtil, PasswordEncoder passwordEncoder) {
+    public AdminUserController(
+            CustomUserDetailsService userDetailsService,
+            RoleService roleService,
+            AuthenticationManager authenticationManager,
+            JwtUtil jwtUtil,
+            PasswordEncoder passwordEncoder
+    ) {
         this.userDetailsService = userDetailsService;
         this.roleService = roleService;
         this.authenticationManager = authenticationManager;
@@ -59,9 +63,9 @@ public class AdminUserController {
 
     @PostMapping(path = "/sign-up", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("permitAll()")
-    public ResponseEntity<User> signUp(@RequestBody UserSignUpRequest request){
+    public ResponseEntity<User> signUp(@RequestBody UserSignUpRequest request) throws Exception {
 
-        userDetailsService.userExist(request.getUsername());
+        if (userDetailsService.userExist(request.getUsername())) throw new Exception(String.format("Username %s not found", request.getUsername()));
 
         Set<Role> roles = request.getRoleType()
                 .stream()
@@ -83,13 +87,19 @@ public class AdminUserController {
 
     @PostMapping(path = "/login", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("permitAll()")
-    public ResponseEntity<?> getAuthenticationToken(@RequestBody UsernamePasswordAuthenticationRequest request) throws AuthenticationException, BadCredentialsException {
-        authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        request.getUsername(),
-                        request.getPassword()
-                )
-        );
+    public ResponseEntity<?> getAuthenticationToken(@RequestBody UsernamePasswordAuthenticationRequest request) throws AuthenticationException {
+        log.info(request.getPassword());
+        try {
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(
+                            request.getUsername(),
+                            request.getPassword()
+                    )
+            );
+            log.info(request.getUsername());
+        }catch (AuthenticationException ex) {
+            log.error("Invalid username or password");
+        }
 
         UserDetails userDetails = userDetailsService.loadUserByUsername(request.getUsername());
         String token  = jwtUtil.generateToken(userDetails);

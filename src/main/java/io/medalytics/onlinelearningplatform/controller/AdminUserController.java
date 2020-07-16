@@ -88,7 +88,6 @@ public class AdminUserController {
     @PostMapping(path = "/login", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("permitAll()")
     public ResponseEntity<?> getAuthenticationToken(@RequestBody UsernamePasswordAuthenticationRequest request) throws AuthenticationException {
-        log.info(request.getPassword());
         try {
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
@@ -96,9 +95,8 @@ public class AdminUserController {
                             request.getPassword()
                     )
             );
-            log.info(request.getUsername());
         }catch (AuthenticationException ex) {
-            log.error("Invalid username or password");
+            ex.printStackTrace();
         }
 
         UserDetails userDetails = userDetailsService.loadUserByUsername(request.getUsername());

@@ -1,7 +1,9 @@
 package io.medalytics.onlinelearningplatform.service;
 
+import io.medalytics.onlinelearningplatform.model.Role;
 import io.medalytics.onlinelearningplatform.model.User;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -18,20 +20,21 @@ public class CustomUserDetails implements UserDetails {
     private List<GrantedAuthority> authorities;
 
     public CustomUserDetails(User user) {
+        String[] roles = user.getRoles()
+                .stream()
+                .map(Role::getName)
+                .toArray(String[]::new);
         this.first_name = user.getFirstName();
         this.last_name = user.getLastName();
         this.username = user.getUsername();
         this.email = user.getEmail();
         this.password = user.getPassword();
-        this.authorities = user.getRoles()
-                .stream()
-                .map(role -> new SimpleGrantedAuthority(role.getName()))
-                .collect(Collectors.toList());
+        this.authorities = AuthorityUtils.createAuthorityList(roles);
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        return authorities;
     }
 
     @Override
@@ -79,21 +82,21 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public boolean isAccountNonExpired() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean isEnabled() {
-        return false;
+        return true;
     }
 }

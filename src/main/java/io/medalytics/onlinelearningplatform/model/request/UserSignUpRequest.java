@@ -1,4 +1,4 @@
-package io.medalytics.onlinelearningplatform.model;
+package io.medalytics.onlinelearningplatform.model.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

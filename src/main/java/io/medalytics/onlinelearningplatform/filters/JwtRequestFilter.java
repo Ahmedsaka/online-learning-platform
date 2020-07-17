@@ -1,6 +1,10 @@
-package io.medalytics.onlinelearningplatform.util;
+package io.medalytics.onlinelearningplatform.filters;
 
+import io.medalytics.onlinelearningplatform.exception.InvalidTokenException;
 import io.medalytics.onlinelearningplatform.service.CustomUserDetailsService;
+import io.medalytics.onlinelearningplatform.util.JwtUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -17,6 +21,8 @@ import java.io.IOException;
 
 @Component
 public class JwtRequestFilter extends OncePerRequestFilter {
+
+    private final Logger log = LoggerFactory.getLogger(JwtRequestFilter.class);
 
     private CustomUserDetailsService userDetailsService;
     private JwtUtil jwtUtil;
@@ -38,7 +44,8 @@ public class JwtRequestFilter extends OncePerRequestFilter {
             jwt = authorizationHeader.substring(7);
             try {
                 username = jwtUtil.extractUsername(jwt);
-            }catch (Exception ex){
+            }catch (InvalidTokenException ex){
+                log.error("Token is either invalid or expired", ex.getCause());
                 ex.printStackTrace();
             }
         }

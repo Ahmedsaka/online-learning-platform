@@ -1,7 +1,7 @@
 package io.medalytics.onlinelearningplatform.config;
 
 import io.medalytics.onlinelearningplatform.service.CustomUserDetailsService;
-import io.medalytics.onlinelearningplatform.util.JwtRequestFilter;
+import io.medalytics.onlinelearningplatform.filters.JwtRequestFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

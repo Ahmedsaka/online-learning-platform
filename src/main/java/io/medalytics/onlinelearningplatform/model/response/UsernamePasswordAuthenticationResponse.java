@@ -10,5 +10,5 @@ import lombok.Setter;
 @Getter@Setter
 public class UsernamePasswordAuthenticationResponse {
 
-    private String jwtToken;
+    private String jwt;
 }

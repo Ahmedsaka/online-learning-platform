@@ -1,19 +1,15 @@
-package io.medalytics.onlinelearningplatform.service;
+package io.medalytics.onlinelearningplatform.model;
 
-import io.medalytics.onlinelearningplatform.model.Role;
-import io.medalytics.onlinelearningplatform.model.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class CustomUserDetails implements UserDetails {
-    private String first_name;
-    private String last_name;
+    private String firstName;
+    private String lastName;
     private String username;
     private String email;
     private String password;
@@ -24,8 +20,8 @@ public class CustomUserDetails implements UserDetails {
                 .stream()
                 .map(Role::getName)
                 .toArray(String[]::new);
-        this.first_name = user.getFirstName();
-        this.last_name = user.getLastName();
+        this.firstName = user.getFirstName();
+        this.lastName = user.getLastName();
         this.username = user.getUsername();
         this.email = user.getEmail();
         this.password = user.getPassword();
@@ -51,20 +47,24 @@ public class CustomUserDetails implements UserDetails {
         return email;
     }
 
-    public String getFirst_name() {
-        return first_name;
+    public String getFirstName() {
+        return firstName;
     }
 
-    public void setFirst_name(String first_name) {
-        this.first_name = first_name;
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
     }
 
-    public String getLast_name() {
-        return last_name;
+    public String getLastName() {
+        return lastName;
     }
 
-    public void setLast_name(String last_name) {
-        this.last_name = last_name;
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public void setAuthorities(List<GrantedAuthority> authorities) {
+        this.authorities = authorities;
     }
 
     public void setUsername(String username) {
@@ -99,4 +99,10 @@ public class CustomUserDetails implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        return super.equals(obj);
+    }
+
 }
